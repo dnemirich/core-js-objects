@@ -356,29 +356,91 @@ function group(array, keySelector, valueSelector) {
  *  For more examples see unit tests.
  */
 
+class CssSelector {
+  constructor() {
+    this.el = null;
+    this.idVal = null;
+    this.classes = [];
+    this.attrs = [];
+    this.pseudoClasses = [];
+    this.pseudoEl = null;
+  }
+
+  element(value) {
+    this.el = value;
+    return this;
+  }
+
+  id(value) {
+    this.idVal = `#${value}`;
+    return this;
+  }
+
+  class(value) {
+    this.classes.push(`.${value}`);
+    return this;
+  }
+
+  attr(value) {
+    this.attrs.push(`[${value}]`);
+    return this;
+  }
+
+  pseudoClass(value) {
+    this.pseudoClasses.push(`:${value}`);
+    return this;
+  }
+
+  pseudoElement(value) {
+    this.pseudoEl = `::${value}`;
+    return this;
+  }
+
+  stringify() {
+    return `${this.el || ''}${this.idVal || ''}${this.classes.join(
+      ''
+    )}${this.attrs.join('')}${this.pseudoClasses.join('')}${
+      this.pseudoEl || ''
+    }`;
+  }
+}
+
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  instance: null,
+
+  stringify() {
+    this.instance = new CssSelector();
+    return this.instance.stringify();
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.element(value);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.id(value);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.class(value);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.attr(value);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.pseudoClass(value);
+  },
+
+  pseudoElement(value) {
+    if (!this.instance) this.instance = new CssSelector();
+    return this.instance.pseudoElement(value);
   },
 
   combine(/* selector1, combinator, selector2 */) {
